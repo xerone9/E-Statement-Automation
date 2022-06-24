@@ -1,5 +1,5 @@
-# Indus University/E-Statement-Automation
-This Automation Process is designed as per requirements of Indus University (It wont work for everyone)
+# E-Statement-Automation
+This Automation Process is designed for a specific institute (It wont work for everyone)
 
 Daily Work Folder should be presend on the desktop.
 
