@@ -8,7 +8,7 @@ Copy all the contents in the PDF (ctrl + a) and paste it in the text file and sa
 
 Application will then read the text file and remove all the lines in the statement other then lines starting with "Clearing Outward" and "Cash Deposit" and will create 2 csv files.
 
-1st file is for Indus University EMS that contains only 2 columns "Serial number" and "Receipt No" (without headers) the file will be saved by the name of date present on the statement e.g: 12Aug22.csv. Login to your LMS account and go to accounts, upload fee voucher and upload that csv file (after reviewing it) thier select date refresh and post.
+1st file is for the University EMS (as I was instructed) that contains only 2 columns "Serial number" and "Receipt No" (without headers) the file will be saved by the name of date present on the statement e.g: 12Aug22.csv. Login to your LMS account and go to accounts, upload fee voucher and upload that csv file (after reviewing it) thier select date refresh and post.
 
 2nd File is for reconciliation and will contains columns like "Serail number", "Branch Code", "Narration/Particulars", "Amount" (without headers)the file will be saved with the name of For Reconciliation + date e.g: For Reconciliation 12-Aug-22.csv
 
