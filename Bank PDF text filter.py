@@ -46,7 +46,11 @@ for file in glob.glob("*.pdf"):
     filepath = file
     if filepath.endswith((".pdf", ".PDF")):
         account_number, statement_date = str(file).split(" - ")[0], str(file).split(" - ")[1]
-        os.rename(str(file), account_translation.get(account_number, account_number) + " - " + statement_date)
+        # for selected accounts due to closing module
+        if account_number in account_translation:
+            os.rename(str(file), account_translation.get(account_number, account_number) + " - " + statement_date)
+        else:
+            os.remove(file)
 
 
 
