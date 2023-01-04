@@ -28,10 +28,32 @@ def listRemoveDateAdditional(value):
     return str(value).replace('{','').replace('}','').replace("'","").replace(",","-").replace('day: ','').replace(" month: ","").replace(" year: ","")
 
 
-############################ Will search for All PDFs in the folder and combine them ######################################
+    ############################ Renaming Account Statements ######################################
+
+account_translation = {}
+
+with open("dictionary.ini") as file:
+    data = file.readlines()
+    for line in data:
+        values = str(line.strip())
+        key, value = values.split("=")
+        account_translation[key] = value
 
 desktop = os.path.expanduser("~\desktop\\Daily Work\\")
 os.chdir(desktop)
+file_dict = {}
+for file in glob.glob("*.pdf"):
+    filepath = file
+    if filepath.endswith((".pdf", ".PDF")):
+        account_number, statement_date = str(file).split(" - ")[0], str(file).split(" - ")[1]
+        os.rename(str(file), account_translation.get(account_number, account_number) + " - " + statement_date)
+
+
+
+
+
+    ############################ Will search for All PDFs in the folder and combine them ######################################
+
 file_dict = {}
 for file in glob.glob("*.pdf"):
     filepath = file
@@ -210,11 +232,17 @@ os.mkdir(makeFolder)
 desktop = os.path.expanduser("~\desktop\\Daily Work\\")
 
 
-
-
 for file in glob.glob("*.pdf"):
     filepath = file
     shutil.move(desktop + "\\" + file,
              makeFolder + "\\" + file)
 
-os.startfile(csvDate + '.csv')
+
+########################### Moving CSV Files To Relevant Folder ######################
+
+for file in glob.glob("*.csv"):
+    filepath = file
+    shutil.move(desktop + "\\" + file,
+             "csv_vault\\" + file)
+
+os.startfile("csv_vault\\" + csvDate + '.csv')
