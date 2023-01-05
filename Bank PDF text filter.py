@@ -1,4 +1,5 @@
-from PyPDF2 import PdfFileMerger
+from PyPDF2 import PdfMerger
+from PyPDF2 import PdfReader
 import glob, os, re
 import csv
 import shutil
@@ -30,40 +31,45 @@ def listRemoveDateAdditional(value):
 
     ############################ Renaming Account Statements ######################################
 
-account_translation = {}
+accounts = []
 
-with open("dictionary.ini") as file:
+with open("accounts.ini") as file:
     data = file.readlines()
     for line in data:
         values = str(line.strip())
-        key, value = values.split("=")
-        account_translation[key] = value
+        accounts.append(values)
 
 desktop = os.path.expanduser("~\desktop\\Daily Work\\")
-os.chdir(desktop)
-file_dict = {}
-for file in glob.glob("*.pdf"):
-    filepath = file
-    if filepath.endswith((".pdf", ".PDF")):
-        account_number, statement_date = str(file).split(" - ")[0], str(file).split(" - ")[1]
-        # for selected accounts due to closing module
-        if account_number in account_translation:
-            os.rename(str(file), account_translation.get(account_number, account_number) + " - " + statement_date)
-        else:
-            os.remove(file)
+for filename in os.listdir(desktop):
+    if filename.endswith((".pdf", ".PDF")):
+        reader = PdfReader(desktop + filename)
+        pages = len(reader.pages)
+        account_number = ""
+        for i in range(pages):
+            page = reader.pages[i]
+            data = str(page.extract_text())
+            if data.__contains__("Pak Rupees"):
+                account_number = data.split("Pak Rupees")[1].split(" Account #")[0]
+                statement_date = str(filename).split(" - ")[1]
+                os.rename(str(desktop + filename), desktop + account_number + " - " + statement_date)
+                break
 
-
-
+for filename in os.listdir(desktop):
+    if filename.endswith((".pdf", ".PDF")):
+        account = str(filename).split(" - ")[0]
+        if account not in accounts:
+            os.remove(desktop + filename)
 
 
     ############################ Will search for All PDFs in the folder and combine them ######################################
 
 file_dict = {}
+os.chdir(desktop)
 for file in glob.glob("*.pdf"):
     filepath = file
     if filepath.endswith((".pdf", ".PDF")):
             file_dict[file] = filepath
-merger = PdfFileMerger(strict=False)
+merger = PdfMerger(strict=False)
 
 for k, v in file_dict.items():
     print(k, v)
