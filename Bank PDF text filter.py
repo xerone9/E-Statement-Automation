@@ -45,12 +45,13 @@ for filename in os.listdir(desktop):
         reader = PdfReader(desktop + filename)
         pages = len(reader.pages)
         account_number = ""
+        statement_date = ""
         for i in range(pages):
             page = reader.pages[i]
             data = str(page.extract_text())
             if data.__contains__("Pak Rupees"):
                 account_number = data.split("Pak Rupees")[1].split(" Account #")[0]
-                statement_date = str(filename).split(" - ")[1]
+                statement_date = data.split("KARACHI.TEL")[0][-11:]
                 os.rename(str(desktop + filename), desktop + account_number + " - " + statement_date)
                 break
 
