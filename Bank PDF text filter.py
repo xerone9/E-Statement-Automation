@@ -51,8 +51,8 @@ for filename in os.listdir(desktop):
             data = str(page.extract_text())
             if data.__contains__("Pak Rupees"):
                 account_number = data.split("Pak Rupees")[1].split(" Account #")[0]
-                statement_date = data.split("KARACHI.TEL")[0][-11:]
-                os.rename(str(desktop + filename), desktop + account_number + " - " + statement_date)
+                statement_date = data.split(" ** Closing Balance **")[0][-11:]
+                os.rename(str(desktop + filename), desktop + account_number + " - " + statement_date + ".pdf")
                 break
 
 for filename in os.listdir(desktop):
