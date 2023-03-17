@@ -1,5 +1,6 @@
 from PyPDF2 import PdfMerger
 from PyPDF2 import PdfReader
+from PyPDF2 import PdfWriter
 import glob, os, re
 import csv
 import shutil
@@ -39,7 +40,50 @@ with open("accounts.ini") as file:
         values = str(line.strip())
         accounts.append(values)
 
+passwords = []
+
+with open("passwords.ini") as file:
+    data = file.readlines()
+    for line in data:
+        values = str(line.strip())
+        passwords.append(values)
+
 desktop = os.path.expanduser("~\desktop\\Daily Work\\")
+
+############################ Decrypting Files if are Password Protected ######################################
+
+for filename in os.listdir(desktop):
+    if filename.endswith((".pdf", ".PDF")):
+        encrypted_file = desktop + filename
+        decrypted_file = desktop + "unlocked - " + filename
+        # reader = PdfReader(desktop + filename)
+        with open(encrypted_file, 'rb') as pdf_file:
+            pdf_reader = PdfReader(pdf_file)
+            if pdf_reader.is_encrypted:
+                # Loop through each password and try to decrypt the file
+                for password in passwords:
+                    if pdf_reader.decrypt(password) == 1:
+                        # If the password is correct, create a new PDF file without password
+                        pdf_writer = PdfWriter()
+                        for page_num in range(len(pdf_reader.pages)):
+                            pdf_writer.add_page(pdf_reader.pages[page_num])
+                        with open(decrypted_file, 'wb') as output_file:
+                            pdf_writer.write(output_file)
+                        pdf_reader.stream.close()
+                        os.remove(desktop + filename)
+                        break
+            else:
+                pass
+
+for filename in os.listdir(desktop):
+    if filename.endswith((".pdf", ".PDF")):
+        with open(desktop + filename, 'rb') as pdf_file:
+            pdf_reader = PdfReader(pdf_file)
+            if pdf_reader.is_encrypted:
+                pdf_reader.stream.close()
+                os.remove(desktop + filename)
+
+
 for filename in os.listdir(desktop):
     if filename.endswith((".pdf", ".PDF")):
         reader = PdfReader(desktop + filename)
