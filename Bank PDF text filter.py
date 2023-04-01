@@ -72,6 +72,8 @@ for filename in os.listdir(desktop):
                         pdf_reader.stream.close()
                         os.remove(desktop + filename)
                         break
+                else:
+                    print("No Password Found For: " + encrypted_file)
             else:
                 pass
 
