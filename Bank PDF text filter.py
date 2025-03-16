@@ -98,6 +98,8 @@ for filename in os.listdir(desktop):
             if data.__contains__("Pak Rupees"):
                 account_number = data.split("Pak Rupees")[1].split(" Account #")[0]
                 statement_date = data.split(" ** Closing Balance **")[0][-11:]
+                if statement_date.__contains__("DB"):
+                    statement_date = data.split(" ** Opening Balance ** ")[1].split("Value Date")[0]
                 os.rename(str(desktop + filename), desktop + account_number + " - " + statement_date + ".pdf")
                 break
 
